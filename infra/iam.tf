@@ -39,7 +39,7 @@ resource "aws_iam_policy" "emr_policy" {
         Action = [
           "glue:*"
         ]
-        Resource = "arn:aws:glue:${var.region}:${var.account}:${var.app_name}_${var.environment}_analytics"
+        Resource = "arn:aws:glue:${var.aws_region}:${var.account}:${var.app_name}_${var.environment}_analytics"
       },
       {
         Sid    = "Logs"
