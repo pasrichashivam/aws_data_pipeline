@@ -18,6 +18,10 @@ variable airflow_bucket {
     type = string
 }
 
+variable artifacts_bucket {
+    type = string
+}
+
 variable account {
     type = string
 }
