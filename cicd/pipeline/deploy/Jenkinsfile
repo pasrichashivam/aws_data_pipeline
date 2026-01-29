@@ -51,7 +51,7 @@ pipeline {
             env.TARGET_BRANCH = env.BRANCH_NAME
             echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}"
           }
-
+          env.TARGET_BRANCH="develop"
           loadEnv(env.TARGET_BRANCH)
         }
       }
