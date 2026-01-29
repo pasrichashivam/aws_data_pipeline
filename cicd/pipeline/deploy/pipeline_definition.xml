@@ -35,7 +35,6 @@
           <credentialsId>github-credentials-id</credentialsId>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
-
       <branches>
         <hudson.plugins.git.BranchSpec>
           <name>*/$ENV</name>
@@ -49,12 +48,6 @@
 
     <scriptPath>cicd/pipeline/deploy/Jenkinsfile</scriptPath>
   </definition>
-
-  <triggers>
-    <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.39.0">
-      <spec></spec>
-    </com.cloudbees.jenkins.GitHubPushTrigger>
-  </triggers>
 
   <disabled>false</disabled>
 </flow-definition>
