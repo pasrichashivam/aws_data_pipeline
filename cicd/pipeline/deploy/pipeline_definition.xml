@@ -35,7 +35,6 @@
           <credentialsId>github-credentials-id</credentialsId>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
-      
       <branches>
         <hudson.plugins.git.BranchSpec>
           <name>*/$ENV</name>
