@@ -26,6 +26,7 @@ pipeline {
     EMR_ARTIFACT_PATH = "${env.WORKSPACE}/artifact"
     INFRA_PATH = "${env.WORKSPACE}/infra"
     DAGS_PATH = "${env.WORKSPACE}/dags"
+    ENVIRONMENT = "dev"
   }
 
   parameters {
@@ -51,7 +52,6 @@ pipeline {
             env.TARGET_BRANCH = env.BRANCH_NAME
             echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}"
           }
-          loadEnv(env.TARGET_BRANCH)
         }
       }
     }
@@ -97,6 +97,5 @@ pipeline {
         }
       }
     }
-
   }
 }
