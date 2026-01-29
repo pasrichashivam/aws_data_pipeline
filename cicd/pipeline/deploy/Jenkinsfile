@@ -26,7 +26,10 @@ pipeline {
     EMR_ARTIFACT_PATH = "${env.WORKSPACE}/artifact"
     INFRA_PATH = "${env.WORKSPACE}/infra"
     DAGS_PATH = "${env.WORKSPACE}/dags"
-    def currentTimestamp = sh(script: 'date "+%Y%m%d%H%M%S"', returnStdout: true).trim()
+  }
+
+  parameters {
+    choice(name: 'ENV', choices: ['develop', 'production'])
   }
 
   stages {
@@ -38,21 +41,20 @@ pipeline {
 
     stage("Branch Configuration") {
       steps {
-        sh "chmod +x -R ${env.SHELL_SCRIPTS_PATH};"
-      }      
+        script {
+          sh "chmod +x -R ${env.SHELL_SCRIPTS_PATH}"
 
-      if (!env.BITBUCKET_REPO)
-      {
-        env.TARGET_BRANCH = ENV
-        echo("THIS IS MANUAL DEPLOYMENT ON ${env.TARGET_BRANCH}")
-      }
-      else 
-      {
-        env.TARGET_BRANCH = "${env.BRANCH_NAME}"
-        echo("THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}")
-      }
+          if (!env.BITBUCKET_REPO) {
+            env.TARGET_BRANCH = env.ENV
+            echo "THIS IS MANUAL DEPLOYMENT ON ${env.TARGET_BRANCH}"
+          } else {
+            env.TARGET_BRANCH = env.BRANCH_NAME
+            echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}"
+          }
 
-      loadEnv(env.TARGET_BRANCH)
+          loadEnv(env.TARGET_BRANCH)
+        }
+      }
     }
 
     stage("Setting Environment Variables") {
@@ -73,14 +75,29 @@ pipeline {
   
     stage("Terraform Init & Apply") {
       steps {
-        command = "terraform -chdir=${env.INFRA_PATH}/ init -backend-config=\"bucket=${env.TFSTATE_S3_BUCKET}\" -backend-config=\"key=${env.APP_NAME}/terraform.tfstate\" -backend-config=\"region=${env.AWS_REGION}\" -backend-config=\"dynamo_table=${env.DYNAMODB_CICD_TABLE}\""
-        command = command + ";\n" + "terraform -chdir=${env.INFRA_PATH}/ plan -var-file=${PROJECT_ENV_TFVARS} -var-file=${PROJECT_TFVARS} -var=\"current_timestamp=${currentTimestamp}\""
-        command = command + ";\n" + "terraform -chdir=${env.INFRA_PATH}/ apply -var-file=${PROJECT_ENV_TFVARS} -var-file=${PROJECT_TFVARS} -var=\"current_timestamp=${currentTimestamp}\" -auto-approve"
-        
-        echo("Deploy App Infrastructure -command: ${command}")
-        
-        sh "${command}"
+        script {
+          def command = """
+            terraform -chdir=${env.INFRA_PATH} init \
+              -backend-config="bucket=${env.TFSTATE_S3_BUCKET}" \
+              -backend-config="key=${env.APP_NAME}/terraform.tfstate" \
+              -backend-config="region=${env.AWS_REGION}" \
+              -backend-config="dynamo_table=${env.DYNAMODB_CICD_TABLE}"
+
+            terraform -chdir=${env.INFRA_PATH} plan \
+              -var-file=${env.PROJECT_ENV_TFVARS} \
+              -var-file=${env.PROJECT_TFVARS} \
+
+            terraform -chdir=${env.INFRA_PATH} apply \
+              -var-file=${env.PROJECT_ENV_TFVARS} \
+              -var-file=${env.PROJECT_TFVARS} \
+              -auto-approve
+          """
+
+          echo "Deploy App Infrastructure"
+          sh command
+        }
       }
     }
+
   }
 }
