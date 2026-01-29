@@ -1,4 +1,4 @@
-def loadEnv(String env) {
+def loadEnv(String envName) {
     def envConfig = [
         develop: [
             ENVIRONMENT: 'dev'
@@ -8,12 +8,12 @@ def loadEnv(String env) {
         ]
     ]
 
-    if (!envConfig.containsKey(env)) {
-        error "Unknown environment: ${env}"
+    if (!envConfig.containsKey(envName)) {
+        error "Unknown environment: ${envName}"
     }
 
-    envConfig[env].each { k, v ->
-        env."${k}" = v
+    envConfig[envName].each { k, v ->
+        env[k] = v   // correctly sets Jenkins environment variable
     }
 }
 
@@ -51,7 +51,6 @@ pipeline {
             env.TARGET_BRANCH = env.BRANCH_NAME
             echo "THIS IS PUSH TRIGGER DEPLOYMENT ON ${env.TARGET_BRANCH}"
           }
-          env.TARGET_BRANCH="develop"
           loadEnv(env.TARGET_BRANCH)
         }
       }
