@@ -116,11 +116,10 @@ pipeline {
           sh "aws s3 cp ${env.DAGS_PATH} s3://${env.ARTIFACTS_BUCKET}/${env.AIRFLOW_BUCKET}/ --recursive"
       }
     }
-
-    post { 
+  }
+  post { 
       always { 
         cleanWs() 
       } 
     }
-  }
 }
