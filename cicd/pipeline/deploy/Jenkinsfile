@@ -113,7 +113,7 @@ pipeline {
 
     stage("Copy DAGs to S3") {
       steps {
-          sh "aws s3 cp ${env.DAGS_PATH} s3://${env.ARTIFACTS_BUCKET}/${env.AIRFLOW_BUCKET}/ --recursive"
+          sh "aws s3 cp ${env.DAGS_PATH} s3://${env.AIRFLOW_BUCKET}/ --recursive"
       }
     }
   }
