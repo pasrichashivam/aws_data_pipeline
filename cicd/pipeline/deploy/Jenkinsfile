@@ -91,10 +91,29 @@ pipeline {
               -var-file=${env.PROJECT_TFVARS} \
               -auto-approve
           """
-
           echo "Deploy App Infrastructure"
           sh command
         }
+      }
+    }
+    stage("Create EMR Serverless artifact") {
+      steps {
+        script {
+          echo "Createing EMR job artifacts"
+          sh "${env.SHELL_SCRIPTS_PATH}/create_emr_zip.sh"
+        }
+      }
+    }
+
+    stage("Copy Artifacts to S3") {
+      steps {
+          sh "aws s3 cp ${env.EMR_ARTIFACT_PATH} s3://${env.ARTIFACTS_BUCKET}/${env.APP_NAME}/ --recursive"
+      }
+    }
+
+    stage("Copy DAGs to S3") {
+      steps {
+          sh "aws s3 cp ${env.DAGS_PATH} s3://${env.ARTIFACTS_BUCKET}/${env.AIRFLOW_BUCKET}/ --recursive"
       }
     }
   }
