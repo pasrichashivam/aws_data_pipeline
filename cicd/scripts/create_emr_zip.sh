@@ -32,7 +32,7 @@ VENV_PATH="${WORKSPACE}/venv"
 
 if [ -d "${workspace_emr_source_path}" ]; then
     cd "${WORKSPACE}"
-    mkdir artifact
+    mkdir -p artifact
     cd artifact
     echo -e ${NOCOLOR} $(date) ${SCRIPT_LOG_STAMP} "Creating the environment...";
     python3 -m venv ${VENV_PATH}

@@ -19,6 +19,9 @@ def loadEnv(String envName) {
 
 pipeline {
   agent any
+  options { 
+    cleanWs() 
+  }
 
   environment{
     CICD_PARAMS_FOLDER = "${env.WORKSPACE}/cicd/parameters"
