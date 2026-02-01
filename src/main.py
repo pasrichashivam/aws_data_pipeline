@@ -1,15 +1,30 @@
+
+import sys
+import os
+print("sys.executable:", sys.executable)
+print("PYSPARK_PYTHON:", os.environ.get("PYSPARK_PYTHON"))
+print("PYSPARK_DRIVER_PYTHON:", os.environ.get("PYSPARK_DRIVER_PYTHON"))
+print("CWD:", os.getcwd())
+print("Files:", os.listdir("."))
+print("System: ", sys.version)
+
 from pyspark.sql import SparkSession
-from transform import transform_data
+from zipfile import ZipFile
 import chispa
+
+with ZipFile('/home/hadoop/pyfiles.zip', 'r') as zip_ref:
+    zip_ref.extractall("/home/hadoop/")
+
 
 print("Chispa Version", chispa.__version__)
 env = 'dev'
 spark = SparkSession.builder.appName("emr-serverless-job").getOrCreate()
 
 input_path = f"s3://raw-bucket-{env}-source/data/leagues.csv"
-output_db = f"{env}_analytics"
+output_db = f"aa_teams_{env}_analytics"
 output_table = "processed"
 
+from transform import transform_data
 df = spark.read.csv(input_path, header=True)
 result_df = transform_data(df)
 

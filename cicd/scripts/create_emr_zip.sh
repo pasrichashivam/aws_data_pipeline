@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #!/bin/bash -e
 
 # File: create_sw_emr_artifacts.sh

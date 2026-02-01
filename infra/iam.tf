@@ -39,7 +39,7 @@ resource "aws_iam_policy" "emr_policy" {
         Action = [
           "glue:*"
         ]
-        Resource = "arn:aws:glue:${var.aws_region}:${var.account}:${var.app_name}_${var.environment}_analytics"
+        Resource = "*"
       },
       {
         Sid    = "Logs"
@@ -50,7 +50,55 @@ resource "aws_iam_policy" "emr_policy" {
           "logs:PutLogEvents"
         ]
         Resource = "*"
+      },
+      {
+	"Statement": [
+		{
+			"Action": [
+				"s3:GetObject",
+				"s3:ListBucket"
+			],
+			"Effect": "Allow",
+			"Resource": [
+				"arn:aws:s3:::raw-bucket-dev-source",
+        "arn:aws:s3:::${var.artifacts_bucket}/*"
+
+			],
+			"Sid": "bucketActions"
+		},
+		{
+			"Action": [
+				"glue:*"
+			],
+			"Effect": "Allow",
+			"Resource": "*",
+			"Sid": "GlueCatalog"
+		},
+		{
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": [
+          "arn:aws:iam::${var.account}:role/service-role/AmazonMWAA-data_engineering_mwaa_env-34mTr5"
+      ],
+      "Condition": {
+          "StringEquals": {
+              "iam:PassedToService": "airflow.amazonaws.com"
+          }
       }
+    },
+		{
+			"Action": [
+				"logs:CreateLogGroup",
+				"logs:CreateLogStream",
+				"logs:PutLogEvents"
+			],
+			"Effect": "Allow",
+			"Resource": "*",
+			"Sid": "Logs"
+		}
+	],
+	"Version": "2012-10-17"
+}
     ]
   })
 }
