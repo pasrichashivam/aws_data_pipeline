@@ -62,8 +62,30 @@ pipeline {
         }
       }
     }
-  
+    stage("Terraform Init & Apply") {
+      steps {
+        script {
+          def command = """
+            terraform -chdir=${env.INFRA_PATH} init \
+              -backend-config="bucket=${env.TFSTATE_S3_BUCKET}" \
+              -backend-config="key=${env.APP_NAME}/terraform.tfstate" \
+              -backend-config="region=${env.AWS_REGION}" \
+              -backend-config="dynamodb_table=${env.DYNAMODB_CICD_TABLE}"
 
+            terraform -chdir=${env.INFRA_PATH} plan \
+              -var-file=${env.PROJECT_ENV_TFVARS} \
+              -var-file=${env.PROJECT_TFVARS} \
+
+            terraform -chdir=${env.INFRA_PATH} apply \
+              -var-file=${env.PROJECT_ENV_TFVARS} \
+              -var-file=${env.PROJECT_TFVARS} \
+              -auto-approve
+          """
+          echo "Deploy App Infrastructure"
+          sh command
+        }
+      }
+    }
     stage("Create EMR Serverless artifact") {
       steps {
         script {
