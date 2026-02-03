@@ -27,12 +27,13 @@ resource "aws_iam_policy" "emr_policy" {
         Effect = "Allow"
         Action = [
           "s3:GetObject",
-          "s3:ListBucket"
+          "s3:ListBucket",
+          "s3:PutObject"
         ]
         Resource = [
           "arn:aws:s3:::${var.source_bucket}/*",
           "arn:aws:s3:::${var.artifacts_bucket}/*",
-          "arn:aws:s3:::${var.catalog_bucket}/*"
+          "arn:aws:s3:::${var.catalog_bucket}"
         ]
       },
       {

@@ -1,5 +1,5 @@
 from pyspark.sql import functions as f
 
-def transform_data(df):
+def transform(df):
     df = df.withColumn('execution_date', f.current_date())
     return df
