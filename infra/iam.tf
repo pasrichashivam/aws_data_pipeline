@@ -46,7 +46,7 @@ resource "aws_iam_policy" "emr_policy" {
         Sid    = "Logs"
         Effect = "Allow"
         Action = [
-          "logs:"
+          "logs:*"
         ]
         Resource = "*"
       }
