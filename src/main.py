@@ -7,16 +7,15 @@ print("PYSPARK_DRIVER_PYTHON:", os.environ.get("PYSPARK_DRIVER_PYTHON"))
 print("CWD:", os.getcwd())
 print("Files:", os.listdir("."))
 print("System: ", sys.version)
+print("ENV:", os.environ.get("app_env"))
+
 
 from pyspark.sql import SparkSession
 from zipfile import ZipFile
-import chispa
 
 with ZipFile('/home/hadoop/pyfiles.zip', 'r') as zip_ref:
     zip_ref.extractall("/home/hadoop/")
 
-
-print("Chispa Version", chispa.__version__)
 env = 'dev'
 spark = SparkSession.builder.appName("emr-serverless-job").getOrCreate()
 
