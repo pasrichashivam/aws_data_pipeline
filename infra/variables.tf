@@ -25,3 +25,7 @@ variable artifacts_bucket {
 variable account {
     type = string
 }
+
+variable catalog_bucket {
+    type = string
+}

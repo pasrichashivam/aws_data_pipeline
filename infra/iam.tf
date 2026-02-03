@@ -31,7 +31,8 @@ resource "aws_iam_policy" "emr_policy" {
         ]
         Resource = [
           "arn:aws:s3:::${var.source_bucket}/*",
-          "arn:aws:s3:::${var.artifacts_bucket}/*"
+          "arn:aws:s3:::${var.artifacts_bucket}/*",
+          "arn:aws:s3:::${var.catalog_bucket}/*"
         ]
       },
       {
