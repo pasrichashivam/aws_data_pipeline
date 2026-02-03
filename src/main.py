@@ -9,7 +9,6 @@ print("Files:", os.listdir("."))
 print("System: ", sys.version)
 print("ENV:", os.environ.get("app_env"))
 
-
 from pyspark.sql import SparkSession
 from zipfile import ZipFile
 
