@@ -18,7 +18,9 @@ S3_EMR_ARTIFACT = f"s3://emr-app-artifacts-dev/{APP_NAME}" # Replace with your S
 SPARK_JOB_DRIVER={
     "sparkSubmit": {
         "entryPoint": f"{S3_EMR_ARTIFACT}/main.py",
-        "sparkSubmitParameters":f"--conf spark.archives={S3_EMR_ARTIFACT}/venv-aws_data_pipeline.tar.gz#environment --conf spark.submit.pyFiles={S3_EMR_ARTIFACT}/pyfiles.zip --conf spark.emr-serverless.driverEnv.PYSPARK_DRIVER_PYTHON=/home/hadoop/environment/bin/python --conf spark.emr-serverless.driverEnv.PYSPARK_PYTHON=/home/hadoop/environment/bin/python --conf spark.executorEnv.PYSPARK_PYTHON=/home/hadoop/environment/bin/python --conf spark.emr-serverless.driverEnv.app_env=dev --conf spark.executorEnv.app_env=dev"
+        "sparkSubmitParameters":f"--conf spark.submit.pyFiles={S3_EMR_ARTIFACT}/pyfiles.zip --conf spark.emr-serverless.driverEnv.app_env=dev --conf spark.executorEnv.app_env=dev"
+
+        # "sparkSubmitParameters":f"--conf spark.archives={S3_EMR_ARTIFACT}/venv-aws_data_pipeline.tar.gz#environment --conf spark.submit.pyFiles={S3_EMR_ARTIFACT}/pyfiles.zip --conf spark.emr-serverless.driverEnv.PYSPARK_DRIVER_PYTHON=/home/hadoop/environment/bin/python --conf spark.emr-serverless.driverEnv.PYSPARK_PYTHON=/home/hadoop/environment/bin/python --conf spark.executorEnv.PYSPARK_PYTHON=/home/hadoop/environment/bin/python --conf spark.emr-serverless.driverEnv.app_env=dev --conf spark.executorEnv.app_env=dev"
     }
 }
 

@@ -30,7 +30,7 @@ resource "aws_iam_policy" "emr_policy" {
           "s3:ListBucket"
         ]
         Resource = [
-          "arn:aws:s3:::${var.source_bucket}",
+          "arn:aws:s3:::${var.source_bucket}/*",
           "arn:aws:s3:::${var.artifacts_bucket}/*"
         ]
       },
